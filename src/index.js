@@ -1,16 +1,15 @@
-(function iifeIndex() {
-  'use strict';
-  const TRACE = true;
-  const DEBUG = true;
+import {transform} from './travesty.js';
 
-  if (TRACE) console.log('index.js loaded');
+const TRACE = true;
+const DEBUG = true;
 
-  document.addEventListener("DOMContentLoaded", function(event) {
-    if (TRACE) console.log('DOMContentLoaded'); 
-  });
+if (TRACE) console.log('index.js loaded');
+
+document.addEventListener("DOMContentLoaded", function(event) {
+  if (TRACE) console.log('DOMContentLoaded'); 
+});
+
+// when user clicks Process...
   
-  // when user clicks Process...
-  
 
-}());
 // @codekit-append "travesty.js";
