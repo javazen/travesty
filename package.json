@@ -4,11 +4,18 @@
   "description": "Simple webapp for turning possibly excellent prose into drivel",
   "main": "index.js",
   "scripts": {
+    "eslint": "jshint ./src/*.js; true",
     "jshint": "jshint ./src/*.js; true",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["ES6","CodeKit","lodash"],
+  "keywords": [
+    "ES6",
+    "CodeKit",
+    "lodash"
+  ],
   "author": "",
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^7.5.0"
   }
 }
