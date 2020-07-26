@@ -1,0 +1,14 @@
+{
+  "name": "travesty",
+  "version": "0.1.0",
+  "description": "Simple webapp for turning possibly excellent prose into drivel",
+  "main": "index.js",
+  "scripts": {
+    "jshint": "jshint ./src/*.js; true",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["ES6","CodeKit","lodash"],
+  "author": "",
+  "dependencies": {
+  }
+}

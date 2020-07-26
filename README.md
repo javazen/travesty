@@ -1,2 +1,2 @@
-# Travesty
-Randomizes a block of text
+# travesty
+Simple webapp for turning possibly excellent prose into drivel

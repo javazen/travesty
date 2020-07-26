@@ -1,0 +1,13 @@
+{
+  "esversion": 6,
+  "browser": true,
+  "elision": true,
+  "jquery": true,
+  "multistr": true,
+  "undef": true,
+  "validthis": true,
+  "-W080": true,
+  "globals": {
+    "console": true
+  }
+}
