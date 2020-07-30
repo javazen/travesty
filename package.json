@@ -4,7 +4,7 @@
   "description": "Simple webapp for turning possibly excellent prose into drivel",
   "main": "index.js",
   "scripts": {
-    "eslint": "jshint ./src/*.js; true",
+    "eslint": "eslint ./src/*.js; true",
     "jshint": "jshint ./src/*.js; true",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
