@@ -1,0 +1,16 @@
+.positionABSOLUTE {
+	position: absolute;
+}
+
+.wrongTotalColoring {
+  color: red;
+}
+
+#level {
+  width: 30px;
+}
+
+#transform {
+	position: relative;
+	left: 80px;
+}
