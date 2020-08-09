@@ -18,6 +18,9 @@ export function transform(str, order) {
   } else if (order === 1) {
     newstr = level1(arr, str);
     return newstr;
+  } else if (order === 2) {
+    newstr = level2(arr, str);
+    return newstr;
   }
   
   return str;
@@ -29,7 +32,7 @@ export function transform(str, order) {
 //   return arr;
 // }
 
-function level0(arr, str) {
+export function level0(arr, str) {
   const len = str.length;
   let newstr = '';
   for (let i=0; i<len; i++) {
@@ -43,10 +46,10 @@ function level0(arr, str) {
 
 function level1(charsArr, str) {
   str = str.toLowerCase();
-  const len = str.length; // 36
+  const len = str.length;
 
   // first get the distribution
-  const distArr = Array(charsArr.length).fill(0); // [3,1,0,...]
+  const distArr = Array(charsArr.length).fill(0);
   for (let i=0; i<len; i++) {
     const ch = str[i];
     const pos = CHARS.indexOf(ch);
@@ -58,7 +61,7 @@ function level1(charsArr, str) {
   // more convenient to have a cumulative distribution
   let cumCount = 0;
   let cumDistArr = [];
-  for (let i=0; i<distArr.length; i++) {          // [3,4,4,...]
+  for (let i=0; i<distArr.length; i++) {
     const currentCount = distArr[i];
     cumCount += currentCount;
     cumDistArr.push(cumCount);
@@ -75,3 +78,64 @@ function level1(charsArr, str) {
   
   return newstr;
 }
+
+function level2(charsArr, str) {
+  str = str.toLowerCase();
+  const len = str.length;
+  
+  // first get the distribution
+  const distArr = [];
+  for (let i=0; i<charsArr.length; i++) {
+    distArr.push(Array(charsArr.length).fill(0));
+  }
+  for (let i=1; i<len; i++) {
+    const prevch = str[i-1];
+    const prevpos = CHARS.indexOf(prevch);
+    if (prevpos !== -1) {
+      const row = distArr[prevpos];
+      const ch = str[i];
+      const pos = CHARS.indexOf(ch);
+      if (pos !== -1) row[pos] = row[pos] + 1;
+    }
+  }
+  // more convenient to have a cumulative distribution
+  for (let i=0; i<charsArr.length; i++) {
+    const row = distArr[i].slice(0);
+    let cumCount = 0;
+    for (let j=0; j<distArr.length; j++) {
+      const currentCount = row[j];
+      cumCount += currentCount;
+      distArr[i][j] = cumCount;
+    }
+  }
+  // get (cumulative) row totals
+  const rowTotals = [];
+  for (let i=0; i<charsArr.length; i++) {
+    rowTotals.push(distArr[i][charsArr.length-1]);
+  }
+  const cumRowTotals = [];
+  let cumCount = 0;
+  for (let i=0; i<charsArr.length; i++) {
+    const currentCount = rowTotals[i];
+    cumCount += currentCount;
+    cumRowTotals[i] = cumCount;
+  }
+  
+  let n, pos, prevch, newstr = 'L2:  ';
+  n = Math.floor((len+1) * Math.random());
+  pos = cumRowTotals.findIndex(element => element >= n);
+  prevch = charsArr[pos];
+  newstr += prevch;
+  for (let i=1; i<len; i++) {
+    let prevpos = CHARS.indexOf(prevch);
+    let rowtot = rowTotals[prevpos];
+    n = Math.floor((rowtot+1) * Math.random());
+    pos = distArr[prevpos].findIndex(element => element >= n);
+    prevch = charsArr[pos];
+    newstr += prevch;
+  }
+  
+  return newstr;
+}
+
+

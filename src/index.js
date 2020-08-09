@@ -3,7 +3,7 @@ import {transform} from './travesty.js';
 const TRACE = true;
 const DEBUG = true;
 
-let levelInput, levelValue = 1, transformBtn;
+let levelInput, levelValue = 2, transformBtn;
 
 if (TRACE) console.log('index.js loaded');
 
