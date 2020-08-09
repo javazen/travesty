@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "eslint": "eslint ./src/*.js; true",
+    "eslint-test": "eslint ./test/spec/*.js; true",
     "jshint": "jshint ./src/*.js; true",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "jshint-test": "jshint ./test/spec/*.js; true",
+    "test": "mocha"
   },
   "keywords": [
     "ES6",
@@ -16,6 +18,9 @@
   "author": "",
   "dependencies": {},
   "devDependencies": {
-    "eslint": "^7.6.0"
+    "chai": "^4.2.0",
+    "eslint": "^7.6.0",
+    "mocha": "^8.0.0",
+    "requirejs": "^2.3.6"
   }
 }
