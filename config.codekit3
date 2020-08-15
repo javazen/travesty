@@ -9,6 +9,17 @@
 	],
 "creatorBuild": "32001",
 "files": {
+	"/.eslintrc.js": {
+		"bF": 0,
+		"ft": 64,
+		"ma": 0,
+		"mi": 1,
+		"oA": 0,
+		"oAP": "/build/.eslintrc.js",
+		"oF": 0,
+		"sC": 3,
+		"tS": 0
+		},
 	"/.gitignore": {
 		"cB": 0,
 		"ft": 8192,
@@ -24,6 +35,22 @@
 		"oA": 1,
 		"oAP": "/build/.jshintrc",
 		"oF": 1
+		},
+	"/build": {
+		"ft": 65536,
+		"oA": 1,
+		"oAP": "/build/build",
+		"oF": 0
+		},
+	"/css/index.css": {
+		"aP": 1,
+		"bl": 0,
+		"ft": 16,
+		"ma": 0,
+		"oA": 2,
+		"oAP": "/build/css/index.css",
+		"oF": 0,
+		"oS": 3
 		},
 	"/index.html": {
 		"cB": 0,
@@ -100,6 +127,25 @@
 		"mi": 1,
 		"oA": 1,
 		"oAP": "/build/src/travesty.js",
+		"oF": 0,
+		"sC": 3,
+		"tS": 0
+		},
+	"/test/mocha.html": {
+		"cB": 0,
+		"ft": 8192,
+		"hM": 0,
+		"oA": 0,
+		"oAP": "/build/test/mocha.html",
+		"oF": 0
+		},
+	"/test/spec/test_travesty.js": {
+		"bF": 0,
+		"ft": 64,
+		"ma": 0,
+		"mi": 1,
+		"oA": 0,
+		"oAP": "/build/test/spec/test_travesty.js",
 		"oF": 0,
 		"sC": 3,
 		"tS": 0

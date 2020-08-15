@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "eslint": "eslint ./src/*.js; true",
-    "eslint-test": "eslint ./test/spec/*.js; true",
+    "eslint-test": "eslint ./test/spec/**.js; true",
     "jshint": "jshint ./src/*.js; true",
-    "jshint-test": "jshint ./test/spec/*.js; true",
+    "jshint-test": "jshint ./test/spec/**.js; true",
     "test": "mocha"
   },
   "keywords": [
