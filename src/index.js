@@ -1,7 +1,7 @@
 import {transform} from './travesty.js';
 
 const TRACE = true;
-const DEBUG = true;
+// const DEBUG = true;
 
 let levelInput, levelValue = 2, transformBtn;
 

@@ -17,7 +17,7 @@
 		"oA": 0,
 		"oAP": "/build/.eslintrc.js",
 		"oF": 0,
-		"sC": 3,
+		"sC": 0,
 		"tS": 0
 		},
 	"/.gitignore": {
@@ -161,7 +161,7 @@
 	"displayValueWasSetByUser": 1,
 	"iconImageName": "meme-facepalm",
 	"iconImageWasSetByUser": 1,
-	"lastBuiltDate": 619201713.35169303
+	"lastBuiltDate": 619204118.65241396
 	},
 "projectSettings": {
 	"abortBuildOnError": 1,
