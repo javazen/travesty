@@ -46,6 +46,7 @@ export function level0(arr, str) {
 
 function level1(charsArr, str) {
   str = str.toLowerCase();
+  str = str.replace(/[^a-zA-Z ']+/g,'');
   const len = str.length;
 
   // first get the distribution
@@ -81,6 +82,7 @@ function level1(charsArr, str) {
 
 function level2(charsArr, str) {
   str = str.toLowerCase();
+  str = str.replace(/[^a-zA-Z ']+/g,'');
   const len = str.length;
   
   // first get the distribution
@@ -123,6 +125,7 @@ function level2(charsArr, str) {
   
   let n, pos, prevch, newstr = 'L2:  ';
   n = Math.floor((len+1) * Math.random());
+  const fn = element => element >= n;
   pos = cumRowTotals.findIndex(element => element >= n);
   prevch = charsArr[pos];
   newstr += prevch;
@@ -130,7 +133,7 @@ function level2(charsArr, str) {
     let prevpos = CHARS.indexOf(prevch);
     let rowtot = rowTotals[prevpos];
     n = Math.floor((rowtot+1) * Math.random());
-    pos = distArr[prevpos].findIndex(element => element >= n);
+    pos = distArr[prevpos].findIndex(fn);
     prevch = charsArr[pos];
     newstr += prevch;
   }

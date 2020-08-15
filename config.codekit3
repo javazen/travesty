@@ -161,7 +161,7 @@
 	"displayValueWasSetByUser": 1,
 	"iconImageName": "meme-facepalm",
 	"iconImageWasSetByUser": 1,
-	"lastBuiltDate": 617478564.45047998
+	"lastBuiltDate": 619201713.35169303
 	},
 "projectSettings": {
 	"abortBuildOnError": 1,
@@ -597,7 +597,7 @@
 			}
 		},
 	"environmentVariablesString": "NODE_ENV:::production",
-	"esLintConfigFileHandlingType": 0,
+	"esLintConfigFileHandlingType": 2,
 	"esLintECMAVersion": 7,
 	"esLintEnvironmentsMask": 1,
 	"esLintRules": {
