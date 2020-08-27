@@ -1,5 +1,5 @@
 const TRACE = true;
-// const DEBUG = true;
+const DEBUG = true;
 const CHARS = "abcdefghijklmnopqrstuvwxyz '";
 
 if (TRACE) console.log('travesty.js loaded');
@@ -9,6 +9,10 @@ if (TRACE) console.log('travesty.js loaded');
 // }
 
 export function transform(str, order) {
+  // clean the string of chars not in CHARS
+  str = str.toLowerCase();
+  str = str.replace(/[^a-zA-Z ']+/g,'');
+  
   let newstr = '';
   const arr = CHARS.slice(0);
   // const arr = process(str);
@@ -27,6 +31,38 @@ export function transform(str, order) {
   }
   
   return str;
+}
+
+// str should already have been cleaned, all chars should be in charsArr
+function initDistArr(charsArr, str, order) {
+  if (order === 1) {
+    const distArr = Array(charsArr.length).fill(0);
+    
+    for (let i=0; i<str.length; i++) {
+      const ch = str[i];
+      const pos = charsArr.indexOf(ch);
+      if (pos === -1) {
+        if (DEBUG) console.log('bad ch= ' + ch);
+      } else {
+        distArr[pos] = distArr[pos] + 1;
+      }
+    }
+    
+    // more convenient to have a cumulative distribution
+    let cumCount = 0;
+    let cumDistArr = [];
+    for (let i=0; i<distArr.length; i++) {
+      const currentCount = distArr[i];
+      cumCount += currentCount;
+      cumDistArr.push(cumCount);
+    }
+    return cumDistArr;
+  } 
+  /*
+  else if (order === 2) {
+    
+  }
+  */
 }
 
 // export function process(str) {
@@ -48,33 +84,16 @@ export function level0(arr, str) {
 }
 
 function level1(charsArr, str) {
-  str = str.toLowerCase();
-  str = str.replace(/[^a-zA-Z ']+/g,'');
   const len = str.length;
 
   // first get the distribution
-  const distArr = Array(charsArr.length).fill(0);
-  for (let i=0; i<len; i++) {
-    const ch = str[i];
-    const pos = CHARS.indexOf(ch);
-    if (pos === -1)
-      console.log('huh?');
-    else
-      distArr[pos] = distArr[pos] + 1;
-  }
-  // more convenient to have a cumulative distribution
-  let cumCount = 0;
-  let cumDistArr = [];
-  for (let i=0; i<distArr.length; i++) {
-    const currentCount = distArr[i];
-    cumCount += currentCount;
-    cumDistArr.push(cumCount);
-  }
+  const cumDistArr1 = initDistArr(charsArr, str, 1);
 
+  // use it to generate a new string at random
   let newstr = 'L1 ';
   for (let i=0; i<len; i++) {
     const n = Math.floor((len+1) * Math.random());
-    const pos = cumDistArr.findIndex(element => element >= n);
+    const pos = cumDistArr1.findIndex(element => element >= n);
     const ch = charsArr[pos];
     // console.log('n= ' + n + ' pos= ' + pos + ' ch= ' + ch);
     newstr += ch;
@@ -84,10 +103,12 @@ function level1(charsArr, str) {
 }
 
 function level2(charsArr, str) {
-  str = str.toLowerCase();
-  str = str.replace(/[^a-zA-Z ']+/g,'');
   const len = str.length;
   
+  // first get the distribution
+  // const cumDistArr1 = initDistArr(charsArr, str, 1);
+  // const cumDistArr2 = initDistArr(charsArr, str, 2);
+
   // first get the distribution
   const distArr1 = Array(charsArr.length).fill(0);
   const distArr2 = [];
@@ -146,8 +167,6 @@ function level2(charsArr, str) {
 }
 
 function level3(charsArr, str) {
-  str = str.toLowerCase();
-  str = str.replace(/[^a-zA-Z ']+/g,'');
   const len = str.length;
   
   // first get the distribution
@@ -160,27 +179,38 @@ function level3(charsArr, str) {
     }
     distArr3.push(distArr2);
   }
-  /*
-  for (let i=1; i<len; i++) {
-    const prevch = str[i-1];
-    const prevpos = CHARS.indexOf(prevch);
-    if (prevpos !== -1) {
-      const row = distArr2[prevpos];
-      const ch = str[i];
-      const pos = CHARS.indexOf(ch);
-      if (pos !== -1) row[pos] = row[pos] + 1;
+  
+  for (let i=2; i<len; i++) {
+    const prevprevch = str[i-2];
+    const prevprevpos = CHARS.indexOf(prevprevch);
+    if (prevprevpos !== -1) {
+      const plane = distArr3[prevprevpos];
+      const prevch = str[i-1];
+      const prevpos = CHARS.indexOf(prevch);
+      if (prevpos !== -1) {
+        const row = plane[prevpos];
+        const ch = str[i];
+        const pos = CHARS.indexOf(ch);
+        if (pos !== -1) row[pos] = row[pos] + 1;
+      }
     }
   }
+  
   // more convenient to have a cumulative distribution
-  for (let i=0; i<charsArr.length; i++) {
-    const row = distArr2[i].slice(0);
-    let cumCount = 0;
-    for (let j=0; j<distArr2.length; j++) {
-      const currentCount = row[j];
-      cumCount += currentCount;
-      distArr2[i][j] = cumCount;
+  for (let i=0; i<distArr3.length; i++) {
+    const plane = distArr3[i].slice(0);
+    for (let j=0; j<plane.length; j++) {
+      const row = plane[j].slice(0);
+      let cumCount = 0;
+      for (let k=0; k<row.length; k++) {
+        const currentCount = row[k];
+        cumCount += currentCount;
+        distArr3[i][j][k] = cumCount;
+      }
     }
   }
+  
+  /*
   // get (cumulative) row totals
   const rowTotals = [];
   for (let i=0; i<charsArr.length; i++) {
