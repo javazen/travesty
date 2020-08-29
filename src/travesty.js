@@ -112,13 +112,13 @@ function initDistArr3(charsArr, str) {
     if (prevprevpos === -1) {
       if (DEBUG) console.log('bad ch= ' + prevprevch);
     } else {
-      const plane = distArr3[prevprevpos];
+      // const plane = distArr3[prevprevpos];
       const prevch = str[i-1];
       const prevpos = charsArr.indexOf(prevch);
       if (prevpos === -1) {
         if (DEBUG) console.log('bad ch= ' + prevch);
       } else {
-        const row = plane[prevpos];
+        // const row = plane[prevpos];
         const ch = str[i];
         const pos = charsArr.indexOf(ch);
         if (pos === -1) {
@@ -156,7 +156,7 @@ function initDistArr3(charsArr, str) {
 
 export function level0(arr, str) {
   const len = str.length;
-  let newstr = '';
+  let newstr = 'L0:  ';
   for (let i=0; i<len; i++) {
     const n = Math.floor(arr.length * Math.random());
     const ch = arr[n];
@@ -173,12 +173,11 @@ function level1(charsArr, str) {
   const cumDistArr1 = initDistArr1(charsArr, str);
 
   // use it to generate a new string at random
-  let newstr = 'L1 ';
+  let newstr = 'L1: ';
   for (let i=0; i<len; i++) {
-    const n = Math.floor((len+1) * Math.random());
+    const n = Math.ceil((len) * Math.random());
     const pos = cumDistArr1.findIndex(element => element >= n);
     const ch = charsArr[pos];
-    // console.log('n= ' + n + ' pos= ' + pos + ' ch= ' + ch);
     newstr += ch;
   }
   
@@ -192,7 +191,7 @@ function level2(charsArr, str) {
   const cumDistArr1 = initDistArr1(charsArr, str);
   const cumDistArr2 = initDistArr2(charsArr, str);
 
-  const rowTotals = [];
+  const rowTotals = []; // distArr1
   for (let i=0; i<charsArr.length; i++) {
     rowTotals.push(cumDistArr2[i][charsArr.length-1]);
   }
@@ -200,7 +199,7 @@ function level2(charsArr, str) {
   const fn = element => element >= n;
   let n, pos, ch, newstr = 'L2:  ';
   // use order==1 approach to get char 0
-  n = Math.floor((len+1) * Math.random());
+  n = Math.ceil((len) * Math.random());
   pos = cumDistArr1.findIndex(fn);
   ch = charsArr[pos];
   newstr += ch;
@@ -208,7 +207,7 @@ function level2(charsArr, str) {
   for (let i=1; i<len; i++) {
     let prevpos = pos;
     let rowtot = rowTotals[prevpos];
-    n = Math.floor((rowtot+1) * Math.random());
+    n = Math.ceil((rowtot) * Math.random());
     pos = cumDistArr2[prevpos].findIndex(fn);
     ch = charsArr[pos];
     newstr += ch;
@@ -221,53 +220,50 @@ function level3(charsArr, str) {
   const len = str.length;
   
   // first get the distribution
-  // first get the distribution
   const cumDistArr1 = initDistArr1(charsArr, str);
   const cumDistArr2 = initDistArr2(charsArr, str);
   const cumDistArr3 = initDistArr3(charsArr, str);
   
   // get (cumulative) row totals
-  const rowTotals2 = [];
+  const rowTotals2 = []; // distArr1
   for (let i=0; i<charsArr.length; i++) {
     rowTotals2.push(cumDistArr2[i][charsArr.length-1]);
   }
-  const rowTotals3 = [];
+  const rowTotals3 = []; // distArr2
   for (let i=0; i<charsArr.length; i++) {
     let tempRowTotals = [];
     for (let j=0; j<charsArr.length; j++) {
-      tempRowTotals.push(cumDistArr2[i][charsArr.length-1]);
+      tempRowTotals.push(cumDistArr3[i][j][charsArr.length-1]);
     }
     rowTotals3.push(tempRowTotals);
   }
   
   const fn = element => element >= n;
-  let n, pos, ch, newstr = 'L3:  ';
+  let n, ch, prevch, prevprevch, pos, prevpos, prevprevpos, newstr = 'L3:  ';
+  
   // use order==1 approach to get char 0
-  n = Math.floor((len+1) * Math.random());
-  pos = cumDistArr1.findIndex(fn);
-  ch = charsArr[pos];
-  newstr += ch;
+  n = Math.ceil((len) * Math.random());
+  prevprevpos = cumDistArr1.findIndex(fn);
+  prevprevch = charsArr[prevprevpos];
+  newstr += prevprevch;
   
   // use order==2 approach to get char 1
-  let prevpos = pos;
-  let rowtot = rowTotals2[prevpos];
-  n = Math.floor((rowtot+1) * Math.random());
-  pos = cumDistArr2[prevpos].findIndex(fn);
-  ch = charsArr[pos];
-  newstr += ch;
+  let rowtot = rowTotals2[prevprevpos];
+  n = Math.ceil((rowtot) * Math.random());
+  prevpos = cumDistArr2[prevprevpos].findIndex(fn);
+  prevch = charsArr[prevpos];
+  newstr += prevch;
   
   // all the rest depend on the 2 chars that came before them
-  /*
-  for (let i=1; i<len; i++) {
-    let prevpos = charsArr.indexOf(prevch);
-    let rowtot = rowTotals3[][prevpos];
-    n = Math.floor((rowtot+1) * Math.random());
-    pos = distArr2[prevpos].findIndex(fn);
-    prevch = charsArr[pos];
-    newstr += prevch;
+  for (let i=2; i<len; i++) {
+    let rowtot = rowTotals3[prevprevpos][prevpos];
+    n = Math.ceil((rowtot) * Math.random());
+    pos = cumDistArr3[prevprevpos][prevpos].findIndex(fn);
+    ch = charsArr[pos];
+    newstr += ch;
+    prevprevpos = prevpos;
+    prevpos = pos;
   }
-  return newstr;
-  */
   
   return newstr;
 }
