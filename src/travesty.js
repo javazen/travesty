@@ -10,8 +10,9 @@ if (TRACE) console.log('travesty.js loaded');
 
 export function transform(str, order) {
   // clean the string of chars not in CHARS
-  str = str.toLowerCase();
-  str = str.replace(/[^a-zA-Z ']+/g,'');
+  // str = str.toLowerCase();
+  // str = str.replace(/[^a-zA-Z ']+/g,'');
+  str = cleanStr(str);
   
   let newstr = '';
   const arr = CHARS.slice(0);
@@ -31,6 +32,12 @@ export function transform(str, order) {
   }
   
   return str;
+}
+
+function cleanStr(str) {
+  let newstr = str.toLowerCase();
+  newstr = newstr.replace(/[^a-zA-Z ']+/g,'');
+  return newstr;
 }
 
 // str should already have been cleaned, all chars should be in charsArr
