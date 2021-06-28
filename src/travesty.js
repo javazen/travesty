@@ -1,6 +1,10 @@
 const TRACE = true;
 const DEBUG = true;
+const TESTING = true;
+
 const CHARS = "abcdefghijklmnopqrstuvwxyz '";
+const R = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1];
+let rIndex = 0;
 
 if (TRACE) console.log('travesty.js loaded');
 
@@ -161,6 +165,17 @@ function initDistArr3(charsArr, str) {
 //   return arr;
 // }
 
+function random(seed) {
+  if (TESTING) {
+    if (seed) rIndex = seed;
+    rIndex++;
+    if (rIndex >= R.length) rIndex = 0;
+    return R[rIndex];
+  }
+
+  return Math.random();
+}
+
 export function level0(arr, str) {
   const len = str.length;
   let newstr = 'L0:  ';
@@ -179,10 +194,11 @@ function level1(charsArr, str) {
   // first get the distribution
   const cumDistArr1 = initDistArr1(charsArr, str);
 
-  // use it to generate a new string at random
+  // use it to generate a new string of chars selected at random
   let newstr = 'L1: ';
   for (let i=0; i<len; i++) {
-    const n = Math.ceil((len) * Math.random());
+    // const n = Math.ceil((len) * Math.random());
+    const n = Math.ceil((len) * random());
     const pos = cumDistArr1.findIndex(element => element >= n);
     const ch = charsArr[pos];
     newstr += ch;
@@ -206,7 +222,8 @@ function level2(charsArr, str) {
   const fn = element => element >= n;
   let n, pos, ch, newstr = 'L2:  ';
   // use order==1 approach to get char 0
-  n = Math.ceil((len) * Math.random());
+  // n = Math.ceil((len) * Math.random());
+  n = Math.ceil((len) * random());
   pos = cumDistArr1.findIndex(fn);
   ch = charsArr[pos];
   newstr += ch;
@@ -214,7 +231,8 @@ function level2(charsArr, str) {
   for (let i=1; i<len; i++) {
     let prevpos = pos;
     let rowtot = rowTotals[prevpos];
-    n = Math.ceil((rowtot) * Math.random());
+    // n = Math.ceil((rowtot) * Math.random());
+    n = Math.ceil((rowtot) * random());
     pos = cumDistArr2[prevpos].findIndex(fn);
     ch = charsArr[pos];
     newstr += ch;
@@ -249,14 +267,16 @@ function level3(charsArr, str) {
   let n, ch, prevch, prevprevch, pos, prevpos, prevprevpos, newstr = 'L3:  ';
   
   // use order==1 approach to get char 0
-  n = Math.ceil((len) * Math.random());
+  // n = Math.ceil((len) * Math.random());
+  n = Math.ceil((len) * random());
   prevprevpos = cumDistArr1.findIndex(fn);
   prevprevch = charsArr[prevprevpos];
   newstr += prevprevch;
   
   // use order==2 approach to get char 1
   let rowtot = rowTotals2[prevprevpos];
-  n = Math.ceil((rowtot) * Math.random());
+  // n = Math.ceil((rowtot) * Math.random());
+  n = Math.ceil((rowtot) * random());
   prevpos = cumDistArr2[prevprevpos].findIndex(fn);
   prevch = charsArr[prevpos];
   newstr += prevch;
@@ -264,7 +284,8 @@ function level3(charsArr, str) {
   // all the rest depend on the 2 chars that came before them
   for (let i=2; i<len; i++) {
     let rowtot = rowTotals3[prevprevpos][prevpos];
-    n = Math.ceil((rowtot) * Math.random());
+    // n = Math.ceil((rowtot) * Math.random());
+    n = Math.ceil((rowtot) * random());
     pos = cumDistArr3[prevprevpos][prevpos].findIndex(fn);
     ch = charsArr[pos];
     newstr += ch;
