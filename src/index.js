@@ -4,6 +4,9 @@ const TRACE = true;
 
 let levelInput, levelValue = 2, decrementBtn, incrementBtn, transformBtn;
 
+// In the unlikely event this is run in a REALLY old browser that does not support console.log
+if (!window.console) { window.console = { log: function(){} }; }
+
 if (TRACE) console.log('index.js loaded');
 
 document.addEventListener("DOMContentLoaded", function(event) {
