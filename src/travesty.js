@@ -34,28 +34,30 @@ function cleanStr(str) {
 
 export function randomize(str, order) {
   const len = str.length;
-  if (order < 0 || order >= len)
+  const orderOK = checkOrder(order, len);
+  if (!orderOK)
     return 'order must be a non-negative integer less than the length of the text';
   
   let newstr = 'L' + order + '->';
   
   const arr = CHARS.slice(0);
   if (order === 0) {
-    newstr += level0(arr, str);
+    newstr += randomizeLevel0(arr, str);
   } else if (order === 1) {
-    newstr += level1(str);
-  } else if (order === 2) {
-    newstr += level2(str);
-  } else if (order === 3) {
-    newstr += level3(str);
-  } else if (order === 4) {
-    newstr += level4(str);
-  }
+    newstr += randomizeLevel1(str);
+  } else if (order < 8) {
+    newstr += randomizeHigherLevels(str, order);
+  } 
   
   return newstr;
 }
 
-
+function checkOrder(order, len) {
+  // we can't allow negative order, or order >= len
+  let ok = (order >= 0 && order < len);
+  // since it gets less interesting around order 7 or 8, maybe restrict this?
+  return ok;
+}
 
 function random(seed) {
   if (MOCK_RANDOM) {
@@ -68,24 +70,10 @@ function random(seed) {
   return Math.random();
 }
 
-export function level0(arr, str) {
+export function randomizeLevel0(arr, str) {
   let newstr = 'L0:  ';
   for (let i=0; i<str.length; i++) {
     const ch = pickCharAtRandom(arr);
-    newstr += ch;
-  }
-  
-  return newstr;
-}
-
-// may want to make sure we do not start with a blank
-function level1(str) {
-  const len = str.length;
-
-  // use it to generate a new string of chars selected at random
-  let newstr = '';
-  for (let i=0; i<len; i++) {
-    const ch = pickCharAtRandom(str);
     newstr += ch;
   }
   
@@ -114,76 +102,64 @@ function getFollowingCharsString(str, prefix) {
     }
   } while (pos > -1);
 
+  // Returning '' causes problems, so just choose a char at random here
+  if (followChars === '') followChars += pickCharAtRandom(str);
+
   return followChars;
 }
 
-function level2(str) {
+// may want to make sure we do not start with a blank
+function randomizeLevel1(str) {
   const len = str.length;
 
-  // pick the first character as in level1
-  let currentChar = pickCharAtRandom(str);
-  let newstr = currentChar;
+  // use it to generate a new string of chars selected at random
+  let newstr = '';
+  for (let i=0; i<len; i++) {
+    const ch = pickCharAtRandom(str);
+    newstr += ch;
+  }
+  
+  return newstr;
+}
 
-  for (let i=0; i<len-1; i++) {
-    // find all the characters that follow the latest character
-    let followChars = getFollowingCharsString(str, currentChar);
+function randomizeHigherLevels(str, order) {
+  // Get the first (order-1) chars, the ones without full (order-1) length prefixes
+  let newstr = getInitialPart(str, order);
 
-    // randomly pick one of the following chars
-    currentChar = pickCharAtRandom(followChars);
+  // and now all the rest
+  newstr = getMainPart(str, order, newstr);
+
+  return newstr;
+}
+
+// return the first initialCharsCount chars, chosen randomly given the
+// context of successively longer prefixes
+function getInitialPart(str, order) {
+  let prefix, followChars, currentChar, newstr = '';
+  const initialCharsCount = order - 1;
+
+  for (let i=0; i<initialCharsCount; i++) {
+    if (i === 0) {
+      currentChar = pickCharAtRandom(str);
+    } else {
+      prefix = newstr.slice(-i);
+      followChars = getFollowingCharsString(str, prefix);
+      currentChar = pickCharAtRandom(followChars);
+    }
     newstr += currentChar;
   }
 
   return newstr;
 }
 
-function level3(str) {
-  const len = str.length;
+function getMainPart(str, order, newstr) {
+  let prefix, followChars, currentChar;
 
-  // pick the first character as in level1
-  let currentChar = pickCharAtRandom(str);
-  let newstr = currentChar;
-
-  // pick the second character as in level2
-  let followChars = getFollowingCharsString(str, currentChar);
-  currentChar = pickCharAtRandom(followChars);
-  newstr += currentChar;
-
-  // and now all the rest
-  for (let i=0; i<len-2; i++) {
-    // find all the characters that follow the last 2 characters
-    let prefix = newstr.slice(-2);
-    followChars = getFollowingCharsString(str, prefix);
-
-    // randomly pick one of the following chars
-    currentChar = pickCharAtRandom(followChars);
-    newstr += currentChar;
-  }
-
-  return newstr;
-}
-
-function level4(str) {
-  const len = str.length;
-
-  // pick the first character as in level1
-  let currentChar = pickCharAtRandom(str);
-  let newstr = currentChar;
-
-  // pick the second character as in level2
-  let followChars = getFollowingCharsString(str, currentChar);
-  currentChar = pickCharAtRandom(followChars);
-  newstr += currentChar;
-
-  // pick the third character as in level3
-  let prefix = newstr.slice(-2);
-  followChars = getFollowingCharsString(str, prefix);
-  currentChar = pickCharAtRandom(followChars);
-  newstr += currentChar;
-
-  // and now all the rest
-  for (let i=0; i<len-3; i++) {
-    // find all the characters that follow the last 2 characters
-    prefix = newstr.slice(-3);
+  const initialCharsCount = order - 1;
+  const loopCount = str.length - initialCharsCount;
+  for (let i=0; i<loopCount; i++) {
+    // find all the characters that follow the last initialCharsCount characters
+    prefix = newstr.slice(-initialCharsCount);
     followChars = getFollowingCharsString(str, prefix);
 
     // randomly pick one of the following chars
