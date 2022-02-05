@@ -16,9 +16,8 @@
     "url": "git+https://github.com/javazen/travesty.git"
   },
   "keywords": [
-    "ES6",
-    "CodeKit",
-    "lodash"
+    "github",
+    "ES6 module"
   ],
   "author": "",
   "license": "ISC",

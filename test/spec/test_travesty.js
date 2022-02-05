@@ -1,7 +1,6 @@
 import * as travesty from '../../src/travesty.js';
 const CHARS = "abcdefghijklmnopqrstuvwxyz '";
 const PREFIX_L0 = 'L0:  ';
-// let getUniqueMonths = days.getUniqueMonths;
 
 let expect = chai.expect;
 
@@ -17,7 +16,7 @@ suite('Testing test_travesty.js', function() {
     level0Array.forEach(function(aTest) {
       test(aTest.testName, function() {
         const arr = (aTest.arr) ? aTest.arr : CHARS;
-        const newstr = travesty.level0(arr, aTest.str);
+        const newstr = travesty.randomizeLevel0(arr, aTest.str);
         expect(newstr).to.equal(aTest.newstr);
       });
     });
