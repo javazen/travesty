@@ -12,10 +12,6 @@ if (!window.console) { window.console = { log: function(){} }; }
 
 if (TRACE) console.log('travesty.js loaded');
 
-// export function log(str) {
-//   if (DEBUG) console.log(str);
-// }
-
 export function transform(str, order) {
   // clean the string of disallowed chars
   str = cleanStr(str);
@@ -32,13 +28,19 @@ function cleanStr(str) {
   return newstr;
 }
 
+export function getOutputTooltip(order) {
+  let title = 'transformed to level ' + order;
+  return title;
+}
+
 export function randomize(str, order) {
   const len = str.length;
   const orderOK = checkOrder(order, len);
   if (!orderOK)
     return 'order must be a non-negative integer less than the length of the text';
   
-  let newstr = 'L' + order + '->';
+  // let newstr = 'L' + order + '->';
+  let newstr = '';
   
   const arr = CHARS.slice(0);
   if (order === 0) {
@@ -71,7 +73,7 @@ function random(seed) {
 }
 
 export function randomizeLevel0(arr, str) {
-  let newstr = 'L0:  ';
+  let newstr = '';
   for (let i=0; i<str.length; i++) {
     const ch = pickCharAtRandom(arr);
     newstr += ch;

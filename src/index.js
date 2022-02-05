@@ -1,4 +1,4 @@
-import {transform} from './travesty.js';
+import {transform, getOutputTooltip} from './travesty.js';
 
 const TRACE = true;
 
@@ -22,19 +22,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
   levelInput = document.getElementById('level');
   levelInput.value = levelValue;
   levelInput.addEventListener('input', handleLevelInput);
-  adjustIncrDecrButtons(levelValue);
+  updateUI(levelValue);
+  // adjustOutputTooltip(levelValue);
 });
-
-// enable/disable buttons depending on levelValue
-function adjustIncrDecrButtons(levelValue) {
-  decrementBtn.disabled = (levelValue <= 0);
-  incrementBtn.disabled = (levelValue >= MAX_SUPPORTED_LEVEL);
-}
 
 // when user changes level...
 function handleLevelInput() {
   levelValue = +this.value;
-  adjustIncrDecrButtons(levelValue);
+  updateUI(levelValue);
 }
 
 // when user clicks decrement...
@@ -45,7 +40,7 @@ function handleDecrement() {
   const str = document.getElementById("inputtext").value;
   const newstr = transform(str, levelValue);
   updateOutput(newstr);
-  adjustIncrDecrButtons(levelValue);
+  updateUI(levelValue);
 }
 
 // when user clicks increment...
@@ -56,7 +51,7 @@ function handleIncrement() {
   const str = document.getElementById("inputtext").value;
   const newstr = transform(str, levelValue);
   updateOutput(newstr);
-  adjustIncrDecrButtons(levelValue);
+  updateUI(levelValue);
 }
 
 // when user clicks transform...
@@ -66,10 +61,23 @@ function handleTransform() {
   updateOutput(newstr);
 }
 
+function updateUI(levelValue) {
+  adjustIncrDecrButtons(levelValue);
+  adjustOutputTooltip();
+}
+
+// enable/disable buttons depending on levelValue
+function adjustIncrDecrButtons(levelValue) {
+  decrementBtn.disabled = (levelValue <= 0);
+  incrementBtn.disabled = (levelValue >= MAX_SUPPORTED_LEVEL);
+}
+
+function adjustOutputTooltip() {
+  const outputtext = document.getElementById("outputtext");
+  outputtext.title = getOutputTooltip(levelValue);
+}
+
 function updateOutput(str) {
   const outputtext = document.getElementById("outputtext");
   outputtext.value = str;
 }
-
-
-// @codekit-append "travesty.js";
