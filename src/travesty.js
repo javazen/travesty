@@ -1,5 +1,5 @@
 const TRACE = true;
-//const DEBUG = true;
+const DEBUG = true;
 const MOCK_RANDOM = false;
 
 // export const CHARS = "abcdefghijklmnopqrstuvwxyz '";
@@ -12,11 +12,11 @@ if (!window.console) { window.console = { log: function(){} }; }
 
 if (TRACE) console.log('travesty.js loaded');
 
-export function transform(str, order) {
+export function transform(str, level) {
   // clean the string of disallowed chars
   str = cleanStr(str);
   
-  let newstr = randomize(str, order);
+  let newstr = randomize(str, level);
   
   return newstr;
 }
@@ -42,35 +42,35 @@ export function sanityCheck(str) {
   return (cleanedStr === str);
 }
 
-export function getOutputTooltip(order) {
-  let title = 'transformed to level ' + order;
+export function getOutputTooltip(level) {
+  let title = 'transformed to level ' + level;
   return title;
 }
 
 
-export function randomize(str, order) {
+export function randomize(str, level) {
   const len = str.length;
-  const orderOK = checkOrder(order, len);
+  const orderOK = checkOrder(level, len);
   if (!orderOK)
-    return 'order must be a non-negative integer less than the length of the text';
+    return 'level must be a non-negative integer less than the length of the text';
   
   let newstr = '';
   
-  if (order === 0) {
+  if (level === 0) {
     newstr += randomizeLevel0(str);
-  } else if (order === 1) {
+  } else if (level === 1) {
     newstr += randomizeLevel1(str);
-  } else if (order < 8) {
-    newstr += randomizeHigherLevels(str, order);
+  } else if (level < 8) {               // ???
+    newstr += randomizeHigherLevels(str, level);
   } 
   
   return newstr;
 }
 
-function checkOrder(order, len) {
-  // we can't allow negative order, or order >= len
-  let ok = (order >= 0 && order < len);
-  // since it gets less interesting around order 7 or 8, maybe restrict this?
+function checkOrder(level, len) {
+  // we can't allow negative level, or level >= len
+  let ok = (level >= 0 && level < len);
+  // since it gets less interesting around level 7 or 8, maybe restrict this?
   return ok;
 }
 
@@ -86,7 +86,7 @@ function random(seed) {
 }
 
 // choose randomly from the chars in str without regard to frequency
-export function randomizeLevel0(str) {
+function randomizeLevel0(str) {
   let strNoDuplicates = removeDuplicates(str);
   let newstr = '';
   for (let i=0; i<str.length; i++) {
@@ -151,21 +151,21 @@ function randomizeLevel1(str) {
   return newstr;
 }
 
-function randomizeHigherLevels(str, order) {
-  // Get the first (order-1) chars, the ones without full (order-1) length prefixes
-  let newstr = getInitialPart(str, order);
+function randomizeHigherLevels(str, level) {
+  // Get the first (level-1) chars, the ones without full (level-1) length prefixes
+  let newstr = getInitialPart(str, level);
 
   // and now all the rest
-  newstr = getMainPart(str, order, newstr);
+  newstr = getMainPart(str, level, newstr);
 
   return newstr;
 }
 
 // return the first initialCharsCount chars, chosen randomly given the
 // context of successively longer prefixes
-function getInitialPart(str, order) {
+function getInitialPart(str, level) {
   let prefix, followChars, currentChar, newstr = '';
-  const initialCharsCount = order - 1;
+  const initialCharsCount = level - 1;
 
   for (let i=0; i<initialCharsCount; i++) {
     if (i === 0) {
@@ -181,10 +181,10 @@ function getInitialPart(str, order) {
   return newstr;
 }
 
-function getMainPart(str, order, newstr) {
+function getMainPart(str, level, newstr) {
   let prefix, followChars, currentChar;
 
-  const initialCharsCount = order - 1;
+  const initialCharsCount = level - 1;
   const loopCount = str.length - initialCharsCount;
   for (let i=0; i<loopCount; i++) {
     // find all the characters that follow the last initialCharsCount characters
@@ -197,7 +197,7 @@ function getMainPart(str, order, newstr) {
 
     const suffix = newstr.slice(-2);
     if (suffix === '  ') {
-      console.log('oops, newstr= ' + newstr);
+      if (DEBUG) console.log('oops, newstr= ' + newstr);
     }
   }
 
