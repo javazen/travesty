@@ -23,7 +23,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
   levelInput.value = levelValue;
   levelInput.addEventListener('input', handleLevelInput);
   updateUI(levelValue);
-  // adjustOutputTooltip(levelValue);
 });
 
 // when user changes level...
