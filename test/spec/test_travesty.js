@@ -1,24 +1,24 @@
 import * as travesty from '../../src/travesty.js';
-const CHARS = "abcdefghijklmnopqrstuvwxyz '";
 
+let assert = chai.assert;
 let expect = chai.expect;
 
 suite('Testing test_travesty.js', function() {
   
   suite('Testing level0', function() {
     var level0Array = [
-      {arr:[], str:'', testName:'empty str', newstr: ''},
+      {str:'', testName:'empty str', result: ''},
+      {str:'abcde', result: 'abcde'},
+      {str:'aabcaadeaa', result: 'abcdeabcde'},
     ];
     level0Array.forEach(function(aTest) {
       if (!aTest.testName) aTest.testName = aTest.str + ' -> ' + aTest.result;
     });
     level0Array.forEach(function(aTest) {
       test(aTest.testName, function() {
-        const arr = (aTest.arr) ? aTest.arr : CHARS;
-        const newstr = travesty.randomizeLevel0(arr, aTest.str);
-        expect(newstr).to.equal(aTest.newstr);
-        const newstrCleaned = newstr.toLowerCase().trim();
-        expect(newstrCleaned).to.equal(newstr);
+        const newstr = travesty.randomizeLevel0(aTest.str);
+        expect(newstr.length).to.equal(aTest.result.length);
+        assert( travesty.sanityCheck(newstr) );
       });
     });
   });
