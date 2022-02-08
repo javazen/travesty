@@ -5,18 +5,19 @@ let expect = chai.expect;
 
 suite('Testing test_travesty.js', function() {
   
-  suite('Testing level0', function() {
-    var level0Array = [
-      {str:'', testName:'empty str', result: ''},
-      {str:'abcde', result: 'abcde'},
-      {str:'aabcaadeaa', result: 'abcdeabcde'},
+  suite('Testing randomize', function() {
+    var randomizeArray = [
+      // {level:0, str:'', testName:'empty str', result: ''}, // no value of level works with empty string
+      {level:0, str:'abcde', result: 'abcde'},
+      {level:0, str:'aabcaadeaa', result: 'abcdeabcde'},
+      {level:1, str:'aabcaadeaa', result: 'abcdeabcde'},
     ];
-    level0Array.forEach(function(aTest) {
-      if (!aTest.testName) aTest.testName = aTest.str + ' -> ' + aTest.result;
+    randomizeArray.forEach(function(aTest) {
+      if (!aTest.testName) aTest.testName = 'L' + aTest.level + ' ' + aTest.str + ' -> ' + aTest.result;
     });
-    level0Array.forEach(function(aTest) {
+    randomizeArray.forEach(function(aTest) {
       test(aTest.testName, function() {
-        const newstr = travesty.randomizeLevel0(aTest.str);
+        const newstr = travesty.randomize(aTest.str, aTest.level);
         expect(newstr.length).to.equal(aTest.result.length);
         assert( travesty.sanityCheck(newstr) );
       });
