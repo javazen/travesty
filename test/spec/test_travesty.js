@@ -23,24 +23,32 @@ suite('Testing test_travesty.js', function() {
       });
     });
   });
-  
-  /*
-  suite('Testing level1', function() {
-    var level1Array = [
-      {str:'The race is not always to the strong', testName:'empty str', newstr: ''},
+
+  suite('Testing getFollowingCharsString', function() {
+    var getFollowingCharsStringArray = [
+      // L1
+      {str:'a stitch in time', prefix:'a', result: ' '},
+      {str:'a stitch in time', prefix:' ', result: 'sit'},
+      {str:'a stitch in time', prefix:'s', result: 't'},
+      {str:'a stitch in time', prefix:'t', result: 'ici'},
+      {str:'a stitch in time', prefix:'i', result: 'tnm'},
+      {str:'a stitch in time', prefix:'z', result: ''}, // z is NOT in the string
+      // L2
+      {str:'a stitch in time', prefix:'a ', result: 's'},
+      {str:'a stitch in time', prefix:' s', result: 't'},
+      {str:'a stitch in time', prefix:'st', result: 'i'},
+      {str:'a stitch in time', prefix:'ti', result: 'tm'},
     ];
-    level1Array.forEach(function(aTest) {
-      if (!aTest.testName) aTest.testName = aTest.str + ' -> ' + aTest.result;
+    getFollowingCharsStringArray.forEach(function(aTest) {
+      if (!aTest.testName) aTest.testName = aTest.str + ' ' + aTest.prefix + ' -> ' + aTest.result;
     });
-    level1Array.forEach(function(aTest) {
+    getFollowingCharsStringArray.forEach(function(aTest) {
       test(aTest.testName, function() {
-        const newstr = travesty.randomizeLevel1(aTest.arr, aTest.str);
-        expect(newstr.length).to.equal(aTest.newstr.length);
-        expect(newstr).to.equal(aTest.newstr);
+        const followChars = travesty.getFollowingCharsString(aTest.str, aTest.prefix);
+        expect(followChars).to.equal(aTest.result);
       });
     });
   });
-  */
 
 });
 
