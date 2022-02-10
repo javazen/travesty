@@ -109,32 +109,27 @@ function pickCharAtRandom(str) {
   return str[pos];
 }
 
-// make a string of all the chars that can follow the specified prefix
-function getFollowingCharsString(str, prefix) {
-  let followChars = '';
+// Make a string of all the chars that can follow the specified prefix
+export function getFollowingCharsString(str, prefix) {
+  // Returning '' causes problems, so we must return *something*
+  // The easiest way to make sure we do is to copy the first few chars
+  // and append them at the end, in effect allowing us to loop around.
+  // So there should never be a case where there are no following chars.
+  let augmentedStr = str + ' ' + str.substring(0, prefix.length);
 
+  let followingChars = '';
   let oldpos = 0;
   let pos;
   do {
-    pos = str.indexOf(prefix, oldpos);
-    let newpos = pos + prefix.length;
-    if (newpos >= str.length) 
-      break; // there is no following char in this case
+    pos = str.indexOf(prefix, oldpos);    
     if (pos !== -1) {
-      followChars += str[newpos];
+      let newpos = pos + prefix.length;
+      followingChars += augmentedStr[newpos];
       oldpos = newpos;
     }
   } while (pos > -1);
 
-  // Returning '' causes problems, so we must return *something*
-  // If the original string contains spaces, a space is good to
-  // start a new word, else just choose a char at random here
-  if (followChars === '') {
-    const fallbackChar = (str.indexOf(' ') !== -1) ? ' ' : pickCharAtRandom(str);
-    followChars += fallbackChar;
-  }
-
-  return followChars;
+  return followingChars;
 }
 
 // may want to make sure we do not start with a blank
