@@ -78,3 +78,4 @@ function updateOutput(str) {
   const outputtext = document.getElementById("outputtext");
   outputtext.value = str;
 }
+
