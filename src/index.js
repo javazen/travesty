@@ -1,8 +1,6 @@
-import {transform, getOutputTooltip} from './travesty.js';
+import {MAX_SUPPORTED_LEVEL, transform, getOutputTooltip} from './travesty.js';
 
 const TRACE = true;
-
-const MAX_SUPPORTED_LEVEL = 7;
 
 let levelInput, levelValue = 2, decrementBtn, incrementBtn, transformBtn;
 

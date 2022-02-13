@@ -1,6 +1,7 @@
 const TRACE = true;
-const DEBUG = true;
+// const DEBUG = true;
 const MOCK_RANDOM = false;
+export const MAX_SUPPORTED_LEVEL = 7;
 
 export const CHARS = "abcdefghijklmnopqrstuvwxyz '";
 
@@ -16,8 +17,55 @@ export function transform(str, level) {
   // clean the string of disallowed chars
   str = cleanStr(str);
   
-  let newstr = randomize(str, level);
+  // we can't allow negative level, or level >= len
+  const levelOK = (level >= 0 && level < str.length);
+  if (!levelOK)
+    return 'level must be a non-negative integer less than the length of the text';
   
+  let newstr = '';
+  
+  if (level <= MAX_SUPPORTED_LEVEL) {
+    newstr += randomize(str, level);
+  } 
+  
+  return newstr;
+}
+
+export function randomize(str, level) {
+  const len = str.length;
+  // Level 0 ==> choose randomly from the chars in str without regard to frequency
+  if (level === 0)
+    str = removeDuplicates(str);
+  
+  // let p0count = 0, p1count = 0, pNcount = 0;
+  let prefix, currentChar, followChars, newstr = '';
+  let prefixLen = 0;
+  while (newstr.length < len) {
+    if (prefixLen === 0) {
+      // p0count++;
+      currentChar = pickCharAtRandom(str);
+      newstr += currentChar;
+      if ( (prefixLen+1) < level ) prefixLen++;
+      // prefixLen = Math.min(prefixLen+1, level-1);
+    } else {
+      // if (prefixLen === 1)
+      //   p1count++;
+      // else
+      //   pNcount++;
+      prefix = newstr.slice(-prefixLen);
+      followChars = getFollowingCharsString(str, prefix);
+      if (followChars) {
+        currentChar = pickCharAtRandom(followChars);
+        newstr += currentChar;
+        prefixLen = Math.min(prefixLen+1, level-1);
+      } else {
+        prefixLen = 0; // start over with no prefix
+      }
+    }
+  }
+
+  // console.log('p0count= ' + p0count + ' p1count= ' + p1count + ' pNcount= ' + pNcount);
+
   return newstr;
 }
 
@@ -67,33 +115,6 @@ export function getOutputTooltip(level) {
   return title;
 }
 
-
-export function randomize(str, level) {
-  const len = str.length;
-  const orderOK = checkOrder(level, len);
-  if (!orderOK)
-    return 'level must be a non-negative integer less than the length of the text';
-  
-  let newstr = '';
-  
-  if (level === 0) {
-    newstr += randomizeLevel0(str);
-  } else if (level === 1) {
-    newstr += randomizeLevel1(str);
-  } else if (level < 8) {               // ???
-    newstr += randomizeHigherLevels(str, level);
-  } 
-  
-  return newstr;
-}
-
-function checkOrder(level, len) {
-  // we can't allow negative level, or level >= len
-  let ok = (level >= 0 && level < len);
-  // since it gets less interesting around level 7 or 8, maybe restrict this?
-  return ok;
-}
-
 function random(seed) {
   if (MOCK_RANDOM) {
     if (seed) rIndex = seed;
@@ -103,18 +124,6 @@ function random(seed) {
   }
 
   return Math.random();
-}
-
-// choose randomly from the chars in str without regard to frequency
-function randomizeLevel0(str) {
-  let strNoDuplicates = removeDuplicates(str);
-  let newstr = '';
-  for (let i=0; i<str.length; i++) {
-    const ch = pickCharAtRandom(strNoDuplicates);
-    newstr += ch;
-  }
-  
-  return newstr;
 }
 
 function removeDuplicates(str) {
@@ -131,15 +140,6 @@ function pickCharAtRandom(str) {
 
 // Make a string of all the chars that can follow the specified prefix
 export function getFollowingCharsString(str, prefix) {
-  // Returning '' causes problems, so we must return *something*
-  // The easiest way to make sure we do is to copy the first few chars
-  // and append them at the end, in effect allowing us to loop around.
-  // So there should never be a case where there are no following chars.
-  const len = str.length;
-  let augmentedStr = str.trim();
-  const len2 = augmentedStr.length;
-  augmentedStr = augmentedStr + ' ' + str.substring(0, prefix.length + (len-len2));
-
   let followingChars = '';
   let oldpos = 0;
   let pos;
@@ -147,7 +147,9 @@ export function getFollowingCharsString(str, prefix) {
     pos = str.indexOf(prefix, oldpos);    
     if (pos !== -1) {
       let newpos = pos + prefix.length;
-      followingChars += augmentedStr[newpos];
+      if (newpos >= str.length)
+        break;
+      followingChars += str[newpos];
       oldpos = newpos;
     }
   } while (pos > -1);
@@ -155,75 +157,3 @@ export function getFollowingCharsString(str, prefix) {
   return followingChars;
 }
 
-// may want to make sure we do not start with a blank
-function randomizeLevel1(str) {
-  const len = str.length;
-
-  // use it to generate a new string of chars selected at random
-  let newstr = '';
-  for (let i=0; i<len; i++) {
-    const ch = pickCharAtRandom(str);
-    newstr += ch;
-  }
-  
-  return newstr;
-}
-
-function randomizeHigherLevels(str, level) {
-  if (str.indexOf('  ') !== -1) {
-    console.log('oops');
-  }
-
-  // Get the first (level-1) chars, the ones without full (level-1) length prefixes
-  let newstr = getInitialPart(str, level);
-
-  // and now all the rest
-  newstr = getMainPart(str, level, newstr);
-
-  return newstr;
-}
-
-// return the first initialCharsCount chars, chosen randomly given the
-// context of successively longer prefixes
-function getInitialPart(str, level) {
-  let prefix, followChars, currentChar, newstr = '';
-  const initialCharsCount = level - 1;
-
-  for (let i=0; i<initialCharsCount; i++) {
-    if (i === 0) {
-      currentChar = ' '; //pickCharAtRandom(str);
-    } else {
-      prefix = newstr.slice(-i);
-      followChars = getFollowingCharsString(str, prefix);
-      currentChar = pickCharAtRandom(followChars);
-    }
-    newstr += currentChar;
-  }
-
-  if (DEBUG) console.log('initialPart= ' + newstr);
-
-  return newstr;
-}
-
-function getMainPart(str, level, newstr) {
-  let prefix, followChars, currentChar;
-
-  const initialCharsCount = level - 1;
-  const loopCount = str.length - initialCharsCount;
-  for (let i=0; i<loopCount; i++) {
-    // find all the characters that follow the last initialCharsCount characters
-    prefix = newstr.slice(-initialCharsCount);
-    followChars = getFollowingCharsString(str, prefix);
-
-    // randomly pick one of the following chars
-    currentChar = pickCharAtRandom(followChars);
-    newstr += currentChar;
-
-    const suffix = newstr.slice(-2);
-    if (suffix === '  ') {
-      if (DEBUG) console.log('oops, newstr= ' + newstr);
-    }
-  }
-
-  return newstr;
-}
