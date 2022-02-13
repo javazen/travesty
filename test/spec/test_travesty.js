@@ -24,6 +24,34 @@ suite('Testing test_travesty.js', function() {
     });
   });
 
+  suite('Testing cleanStr', function() {
+    var cleanStrArray = [
+      {str:'', result: ''},
+      {str:'a', result: 'a'},
+      {str:'a3', result: 'a '},
+      {str:'3a', result: ' a'},
+      {str:'3a2', result: ' a '},
+      {str:'32a', result: ' a'},
+      {str:'3a2 ', result: ' a '},
+      // non-Latin chars
+      {str:'Á', result: 'a'},
+      {str:'á', result: 'a'},
+      {str:'à', result: 'a'},
+      {str:'ñ', result: 'n'},
+      {str:'Él está en el baño', result: 'el esta en el bano'},
+      
+    ];
+    cleanStrArray.forEach(function(aTest) {
+      if (!aTest.testName) aTest.testName = '"' + aTest.str + '" -> "' + aTest.result + '"';
+    });
+    cleanStrArray.forEach(function(aTest) {
+      test(aTest.testName, function() {
+        const newstr = travesty.cleanStr(aTest.str);
+        expect(newstr).to.equal(aTest.result);
+      });
+    });
+  });
+
   suite('Testing getFollowingCharsString', function() {
     var getFollowingCharsStringArray = [
       // L1
@@ -38,6 +66,8 @@ suite('Testing test_travesty.js', function() {
       {str:'a stitch in time', prefix:' s', result: 't'},
       {str:'a stitch in time', prefix:'st', result: 'i'},
       {str:'a stitch in time', prefix:'ti', result: 'tm'},
+      // L2
+      {str:'it is not the critic', prefix:' t', result: 'h'},
     ];
     getFollowingCharsStringArray.forEach(function(aTest) {
       if (!aTest.testName) aTest.testName = aTest.str + ' ' + aTest.prefix + ' -> ' + aTest.result;
