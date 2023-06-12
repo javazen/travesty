@@ -15,8 +15,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
   decrementBtn.addEventListener('click', handleDecrement);
   incrementBtn = document.getElementById("increment");
   incrementBtn.addEventListener('click', handleIncrement);
-  transformBtn = document.getElementById("transform");
-  transformBtn.addEventListener('click', handleTransform);
+  transformBtn = document.getElementById("wand")
+  transformBtn.addEventListener('click', handleTransform)
+  //transformBtn = document.getElementById("transform");
+  //transformBtn.addEventListener('click', handleTransform);
   levelInput = document.getElementById('level');
   levelInput.value = levelValue;
   levelInput.addEventListener('input', handleLevelInput);

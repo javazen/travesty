@@ -14,3 +14,35 @@
 	position: relative;
 	left: 80px;
 }
+ body{
+	text-align: center;
+ }
+ .wand{
+	height: 100px;
+	position: relative;
+	left: 10px;
+	transition: 2s;
+ }
+ .wand:active{
+	transform: rotate(180deg);
+ }
+ button{
+	position: relative;
+	bottom: 50px;
+ }
+ .level-txt{
+	position: relative;
+	bottom: 50px;
+ }
+ footer{
+	position: relative;
+	top: 100px;
+ }
+ .user-input{
+	position: relative;
+	top: 50px;
+ }
+ .wand-container{
+	position: relative;
+	bottom: 25px;
+ }
