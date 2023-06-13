@@ -1,8 +1,8 @@
-import {MAX_SUPPORTED_LEVEL, transform, getOutputTooltip} from './travesty.js';
+import {MAX_SUPPORTED_LEVEL, transform, getOutputTooltip, cleanStr} from './travesty.js';
 
 const TRACE = true;
 
-let levelInput, levelValue = 2, decrementBtn, incrementBtn, transformBtn;
+let levelInput, levelValue = 2, decrementBtn, incrementBtn, transformBtn, cleanBtn;
 
 // In the unlikely event this is run in a REALLY old browser that does not support console.log
 if (!window.console) { window.console = { log: function(){} }; }
@@ -17,8 +17,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
   incrementBtn.addEventListener('click', handleIncrement);
   transformBtn = document.getElementById("wand")
   transformBtn.addEventListener('click', handleTransform)
-  //transformBtn = document.getElementById("transform");
-  //transformBtn.addEventListener('click', handleTransform);
+  // cleanBtn = document.getElementById("cleanStr");
+  // cleanBtn.addEventListener('click', handleClean);
   levelInput = document.getElementById('level');
   levelInput.value = levelValue;
   levelInput.addEventListener('input', handleLevelInput);
@@ -57,6 +57,13 @@ function handleIncrement() {
 function handleTransform() {
   const str = document.getElementById("inputtext").value;
   const newstr = transform(str, levelValue);
+  updateOutput(newstr);
+}
+
+// when user clicks clean...
+function handleClean() {
+  const str = document.getElementById("inputtext").value;
+  const newstr = cleanStr(str);
   updateOutput(newstr);
 }
 
