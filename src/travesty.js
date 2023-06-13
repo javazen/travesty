@@ -85,7 +85,7 @@ export function cleanStr(str) {
   newstr = newstr.replace(/[^\w ']/g, SPACE);
   // also remove the digits; if we don't want a number in the middle of a word
   // to break it into 2 words, we could replace with ''
-  newstr = newstr.replace(/[\d ']/g, SPACE);
+  newstr = newstr.replace(/[\d ]/g, SPACE);
   // consolidate adjoining multiple spaces into one
   newstr = newstr.replace(/\s+/g, SPACE);
   return newstr;
