@@ -16,6 +16,8 @@
 }
  body{
 	text-align: center;
+	font-family: Georgia, 'Times New Roman', Times, serif;
+	background: linear-gradient(to left, #063970 ,#eab676 )
  }
  .wand{
 	height: 100px;
@@ -33,6 +35,8 @@
  .level-txt{
 	position: relative;
 	bottom: 50px;
+	margin-left: 10px;
+	margin-right: 10px;
  }
  footer{
 	position: relative;
@@ -45,4 +49,16 @@
  .wand-container{
 	position: relative;
 	bottom: 25px;
+ }
+ #increment, #decrement {
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	margin-left: 5px;
+	margin-right: 5px;
+	border-radius: 50%;
+ }
+ h2{
+	font-family: 'Caveat', cursive;
  }
