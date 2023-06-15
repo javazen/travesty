@@ -1,5 +1,0 @@
-@use './colors' as *;
-
-@mixin gradient{
-    background: linear-gradient(to right, rgba(#063970, 0.95), rgba(#eab676, 0.95))
-}
