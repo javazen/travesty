@@ -62,3 +62,31 @@
  h2{
 	font-family: 'Caveat', cursive;
  }
+
+ @media screen and (max-width: 1000px){
+	footer{
+		position: relative;
+		top: 500px;
+	}
+	.wand{
+		height: 300px;
+	}
+	#increment, #decrement {
+		padding-left: 25px;
+		padding-right: 25px;
+		padding-top: 15px;
+		padding-bottom: 15px;
+	}
+	h2{
+		font-size: 2rem;
+	}
+	#inputtext, #outputtext{
+		margin-top: 50px;
+		margin-bottom: 50px;
+		height: 300px;
+	}
+	.wand-container{
+		margin-top: 50px;
+		margin-bottom: 50px;
+	}
+ }
